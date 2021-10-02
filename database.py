@@ -33,7 +33,7 @@ dfObj = pd.DataFrame(columns=dfColumns)
 
 mp_hands = mp.solutions.hands
 
-MAX_FILES = 200
+MAX_FILES = 500
 
 for i in range(29):
     trainFiles = names[i]
@@ -61,4 +61,4 @@ for i in range(29):
             else:
                 break
         
-dfObj.to_csv('training.csv')
+dfObj.to_csv('500training.csv')
