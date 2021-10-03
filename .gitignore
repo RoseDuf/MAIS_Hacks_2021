@@ -1,2 +1,8 @@
 asl_alphabet_test/
 asl_alphabet_train/
+models/
+500training_old.csv
+500training_wrong.csv
+500training.csv
+training.csv
+hand_model_rename.joblib
