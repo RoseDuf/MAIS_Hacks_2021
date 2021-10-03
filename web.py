@@ -1,32 +1,21 @@
-import cv2
+from sklearn.preprocessing import MinMaxScaler
+from spellchecker import SpellChecker
+from demos import orchestrator, fig
+from pathlib import Path
 import streamlit as st
 import mediapipe as mp
 import joblib
-from sklearn.preprocessing import MinMaxScaler
-
-from spellchecker import SpellChecker
+import random
+import cv2
+import sys
 
 spell = SpellChecker()
+ml_model = joblib.load('rf_model.joblib') # Load image model
 
-
-import random
-
-ml_model = joblib.load('models/rf_model.joblib')
-
-#  ml_model = joblib.load('models/rf_model.joblib')
-
+# Mediapipe hand utils
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 mp_hands = mp.solutions.hands
-
-avg = 0
-count = 1
-
-LETTERS = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
-
-   
-import sys
-from pathlib import Path
 
 file = Path(__file__).resolve()
 parent, root = file.parent, file.parents[1]
@@ -37,37 +26,38 @@ try:
 except ValueError:  # Already removed
     pass
 
-import streamlit as st
 
 VERSION = ".".join(st.__version__.split(".")[:2])
 
-from demos import orchestrator
-from demos import fig
-
 demo_pages = {
     "Pipeline": orchestrator.show_examples,
-    "ASL table": fig.show_examples
+    #"ASL table": fig.show_examples
 }
 
-contributors = []
-
-# End release updates
-
+avg = 0
+count = 1
 
 def draw_main_page():
     st.write(
         f"""
-        # Webcam Live Feed👋
+        # LiveSigns 👋
         """
     )
+    current_cam = 1
+    st.write('Try switching to `cam 0` if you\'re on mac, and `cam 1` if windows.')
+    cam_switch = st.checkbox('Switch camera input')
+    if cam_switch:
+        current_cam = 1-current_cam
+        
+    st.text('current cam:'+str(current_cam))
 
-    #st.write(intro)
-    
-    #st.title("Webcam Live Feed")
+    st.write('Click `Run` to try out the live sign language translation. ASL sign table can be found in the left, posture for `del` help you enter duplicate symbol; `space` to finish a word and start writing the next.')
+    st.write('Try holding up each symbol for a bit so that it\'s clean for registering.')
     run = st.checkbox('Run')
-    FRAME_WINDOW = st.image([])
-
-    cap = cv2.VideoCapture(1)
+    landmark_on = st.checkbox('Overlay landmarks')
+    
+    FRAME_WINDOW = st.image([]) 
+    cap = cv2.VideoCapture(current_cam)
 
     hand_word = ""
     prev_letter = ""
@@ -77,9 +67,6 @@ def draw_main_page():
     auto_corrected = 0
 
     while run:
-    #_, frame = cap.read()
-    # frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    #FRAME_WINDOW.image(frame)
         with mp_hands.Hands(
             min_detection_confidence=0.5,
             min_tracking_confidence=0.5) as hands:
@@ -90,7 +77,7 @@ def draw_main_page():
                     continue
 
                 width, height = int(cap.get(3)), int(cap.get(4))
-                image = cv2.cvtColor(cv2.flip(image, 1), cv2.COLOR_BGR2RGB)
+                image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
                 image.flags.writeable = False
                 font = cv2.FONT_HERSHEY_SIMPLEX # type: ignore
@@ -100,14 +87,15 @@ def draw_main_page():
                 image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
                 if results.multi_hand_landmarks:
                     hand_landmarks, handedness = results.multi_hand_landmarks[0], results.multi_handedness[0]
-                    #  mp_drawing.draw_landmarks(
-                      #  image,
-                      #  hand_landmarks,
-                      #  mp_hands.HAND_CONNECTIONS,
-                      #  mp_drawing_styles.get_default_hand_landmarks_style(),
-                      #  mp_drawing_styles.get_default_hand_connections_style())
-            #cv2.imshow('MediaPipe Hands', image)
-            #FRAME_WINDOW.image(image)
+
+                    if(landmark_on):
+                         mp_drawing.draw_landmarks(
+                           image,
+                           hand_landmarks,
+                           mp_hands.HAND_CONNECTIONS,
+                           mp_drawing_styles.get_default_hand_landmarks_style(),
+                           mp_drawing_styles.get_default_hand_connections_style())
+
 
                     # add text
                     textX = int(hand_landmarks.landmark[0].x * width) - 150 # type: ignore
@@ -147,7 +135,6 @@ def draw_main_page():
                         if freq_letter > 5 and not displayed:
                             if letter == 'space' and not start_new_word:
                                 start_new_word = True
-
                                 misspelled = list(spell.unknown([hand_word]))
 
                                 if len(misspelled) != 0:
@@ -225,7 +212,7 @@ def draw_main_page():
 pages = list(demo_pages.keys())
 
 if len(pages):
-    pages.insert(0, "Release Notes")
+    pages.insert(0, "LiveSigns")
     st.sidebar.title(f"ASL Recognition🎈")
     query_params = st.experimental_get_query_params()
     if "page" in query_params and query_params["page"][0] == "headliner":
@@ -235,6 +222,7 @@ if len(pages):
     selected_demo = st.sidebar.radio("", pages, index, key="pages")
 else:
     selected_demo = ""
+st.sidebar.image("pic/asl.png", use_column_width=True)
 
 # Draw main page
 if selected_demo in demo_pages:

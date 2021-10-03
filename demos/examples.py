@@ -48,5 +48,11 @@ def show():
     st.image(img7)
     original_title = '<p style="font-size: 13px;">Random forest accuracy for each letter </p>'
     st.markdown(original_title, unsafe_allow_html=True)
+    
+    st.markdown('---')
+    st.subheader('Auto correction')
+    st.write('We used the `space` as a stop sign, then do auto correction of the letters in the stack.')
+    st.markdown('* word is marked `green` if correct upon inputting')
+    st.markdown('* word is marked `yellow` if auto-corrected')
 
 
