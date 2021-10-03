@@ -30,7 +30,7 @@ except ValueError:  # Already removed
 VERSION = ".".join(st.__version__.split(".")[:2])
 
 demo_pages = {
-    "Pipeline": orchestrator.show_examples,
+    "Method overview": orchestrator.show_examples,
     #"ASL table": fig.show_examples
 }
 
@@ -44,15 +44,16 @@ def draw_main_page():
         """
     )
     current_cam = 1
-    st.write('Try switching to `cam 0` if you\'re on mac, and `cam 1` if windows.')
-    cam_switch = st.checkbox('Switch camera input')
+    # st.write('Try switching to `cam 0` if you\'re on mac, and `cam 1` if windows.')
+    cam_switch = st.checkbox('Switch camera input: (try using "Camera #1" on Mac, "Camera #2" on Windows)')
+
     if cam_switch:
         current_cam = 1-current_cam
         
-    st.text('current cam:'+str(current_cam))
+    st.text('Current Camera: #'+str(current_cam + 1))
 
-    st.write('Click `Run` to try out the live sign language translation. ASL sign table can be found in the left, posture for `del` help you enter duplicate symbol; `space` to finish a word and start writing the next.')
-    st.write('Try holding up each symbol for a bit so that it\'s clean for registering.')
+    st.write('Click `Run` to try out the live sign language translation. The ASL sign table can be found on the left; the `del` sign is used before entering a duplicate symbol; `space` is used to end a word.')
+    st.write('(Hold up each symbol for at least one second for best results.)')
     run = st.checkbox('Run')
     landmark_on = st.checkbox('Overlay landmarks')
     
@@ -78,6 +79,7 @@ def draw_main_page():
 
                 width, height = int(cap.get(3)), int(cap.get(4))
                 image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+                #  image = cv2.cvtColor(cv2.flip(image, 1), cv2.COLOR_BGR2RGB)
 
                 image.flags.writeable = False
                 font = cv2.FONT_HERSHEY_SIMPLEX # type: ignore
@@ -164,6 +166,7 @@ def draw_main_page():
                                     #  font, 3, (0, 0, 0), 5, cv2.LINE_AA # type: ignore
                         #  )
                     #  else:
+                    display_letter = letter if letter != 'del' else 'next'
                     image = cv2.putText(image, letter, # type: ignore
                                 (textX, textY),
                                 font, 3, (0, 0, 0), 5, cv2.LINE_AA # type: ignore
@@ -176,22 +179,24 @@ def draw_main_page():
                         (int((width + text_size[0]) / 2), height - 130 + text_size[1]),
                         (0, 0, 0), -1)
 
+                display_word = hand_word
+
                 if auto_corrected == 1:
                     cv2.putText( # type: ignore
                             image,
-                            hand_word,
+                            display_word,
                             (int((width - text_size[0]) / 2), height - 100),
                             font, 3, (0, 255, 255), 2, cv2.LINE_AA) # type: ignore
                 elif auto_corrected == 2: # if correct!
                     cv2.putText( # type: ignore
                             image,
-                            hand_word,
+                            display_word,
                             (int((width - text_size[0]) / 2), height - 100),
                             font, 3, (0, 255, 0), 2, cv2.LINE_AA) # type: ignore
                 else:
                     cv2.putText( # type: ignore
                             image,
-                            hand_word,
+                            display_word,
                             (int((width - text_size[0]) / 2), height - 100),
                             font, 3, (255, 255, 255), 2, cv2.LINE_AA) # type: ignore
 
