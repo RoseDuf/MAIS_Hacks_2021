@@ -12,7 +12,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.naive_bayes import GaussianNB
 
-df = pd.read_csv('500training.csv')
+df = pd.read_csv('training.csv')
 
 X = df.drop(columns=["LetterLabel"])
 X = df.iloc[: , 2:]

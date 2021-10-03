@@ -81,4 +81,4 @@ for i in range(29):
 
 # dfObj = dfObj.iloc[: , 1:]
 df_shuffled = dfObj.sample(frac=1).reset_index(drop=True)
-dfObj.to_csv('500training.csv')
+dfObj.to_csv('training.csv')
