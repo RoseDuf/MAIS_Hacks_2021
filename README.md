@@ -1,13 +1,41 @@
-# MAIS 2021 Hackathon
+# LiveSigns: MAIS 2021 Hackathon
+To learn about what LiveSigns is, look at our devposts description. Watch our video demo!
 
-## Generate the ASL dataset
+## Running LiveSigns:
+### The web version:
+Firstly, clone this repository and checkout to the `web` branch. Run
+```
+pip install -r requirements.txt
+```
+or manually install dependencies as necessary, and run
+```
+streamlit run web.py
+```
+This should run the website on your local computer, and streamlit will give you instructions on how to access it.
+
+### For video calls:
+Checkout to the `main` branch. Run
+```
+pip install -r requirements.txt
+```
+or manually install dependencies as necessary, and run
+```
+python3 asl_camera.py
+```
+
+This will open up OBS virtual camera with LiveSigns working. You can now go onto any video conference platform and turn on your camera (select "OBS Virtual Camera" for your camera).
+
+You must have OBS and the OBS virtual camera add-on installed.
+
+## Methods Overview
+### Generating the ASL dataset
 
 Images used to generate the dataset come from [Akash's ASL Alphabet](https://www.kaggle.com/grassknoted/asl-alphabet)
 
 Executing `python database.py` will then genereate a `training.csv` file.
 Using a maxium of 2800 training images per letter/sign, it was possible to generate [this dataset](https://drive.google.com/file/d/16cAQvTVGYrsoDzOqPR6zceIFB1uKm72G/view?usp=sharing).
 
-## Training the ASL NN
+### Training the ASL NN
 
 With the previously generated dataset, 6 training algorithms (Logistic Regression, Decision Tree Classifier, Random Forest Classifier, Gaussian NB) were tried in order to obtain the highest accuracy from the testing set.
 
