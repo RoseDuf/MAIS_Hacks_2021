@@ -2,6 +2,7 @@ import cv2
 import mediapipe as mp
 import pandas as pd
 import os
+from sklearn.preprocessing import MinMaxScaler
 
 # Create the training database
 
@@ -33,7 +34,7 @@ dfObj = pd.DataFrame(columns=dfColumns)
 
 mp_hands = mp.solutions.hands
 
-MAX_FILES = 500
+MAX_FILES = 2800
 
 for i in range(29):
     trainFiles = names[i]
@@ -52,13 +53,32 @@ for i in range(29):
             file_count += 1
             if file_count <= MAX_FILES:       
                 landmarklist = {'LetterLabel': folders[i]}
-                for id, landmark in enumerate(results.multi_hand_landmarks[0].landmark):
-                    landmarklist[f'X{id}'] = landmark.x
-                    landmarklist[f'Y{id}'] = landmark.y
-                    landmarklist[f'Z{id}'] = landmark.z
+
+                originX = results.multi_hand_landmarks[0].landmark[0].x
+                originY = results.multi_hand_landmarks[0].landmark[0].y
+                originZ = results.multi_hand_landmarks[0].landmark[0].z
+
+                scaler = MinMaxScaler()
+
+                landmarkers = []
+                for landmarker in results.multi_hand_landmarks[0].landmark:
+                    landmarker.x -= originX
+                    landmarker.y -= originY
+                    landmarker.z -= originZ
+                    landmarkers.append([landmarker.x, landmarker.y, landmarker.z])
+                
+                scaled = scaler.fit_transform(landmarkers)
+
+                for id, landmark in enumerate(scaled):
+
+                    landmarklist[f'X{id}'] = landmark[0]
+                    landmarklist[f'Y{id}'] = landmark[1]
+                    landmarklist[f'Z{id}'] = landmark[2]
                 
                 dfObj = dfObj.append([landmarklist], ignore_index=True)
             else:
                 break
-        
+
+# dfObj = dfObj.iloc[: , 1:]
+df_shuffled = dfObj.sample(frac=1).reset_index(drop=True)
 dfObj.to_csv('500training.csv')
