@@ -40,11 +40,11 @@ You must have OBS and the OBS virtual camera add-on installed.
 Images used to generate the dataset come from [Akash's ASL Alphabet](https://www.kaggle.com/grassknoted/asl-alphabet)
 
 Executing `python database.py` will then genereate a `training.csv` file.
-Using a maxium of 2800 training images per letter/sign, it was possible to generate [this dataset](https://drive.google.com/file/d/16cAQvTVGYrsoDzOqPR6zceIFB1uKm72G/view?usp=sharing).
+Using a maxium of 2800 training images per letter/symbol, it was possible to generate [this dataset](https://drive.google.com/file/d/16cAQvTVGYrsoDzOqPR6zceIFB1uKm72G/view?usp=sharing).
 
 ### Training the ASL NN
 
-With the previously generated dataset, 6 training algorithms (Logistic Regression, Decision Tree Classifier, Random Forest Classifier, Gaussian NB) were tried in order to obtain the highest accuracy from the testing set.
+With the previously generated dataset, 6 training algorithms (Logistic Regression, Decision Tree Classifier, Random Forest Classifier, Gaussian NB, Lineary Discriminant Analysis) were tried in order to obtain the highest accuracy from the testing set.
 
 ```
 ================================================
