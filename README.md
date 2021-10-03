@@ -44,7 +44,7 @@ Using a maxium of 2800 training images per letter/symbol, it was possible to gen
 
 ### Training the ASL NN
 
-With the previously generated dataset, 6 training algorithms (Logistic Regression, Decision Tree Classifier, Random Forest Classifier, Gaussian NB, Lineary Discriminant Analysis) were tried in order to obtain the highest accuracy from the testing set.
+With the previously generated dataset, 6 training algorithms (Logistic Regression, Decision Tree Classifier, Random Forest Classifier, Gaussian NB, Linear Discriminant Analysis) were tried in order to obtain the highest accuracy from the testing set.
 
 ```
 ================================================
