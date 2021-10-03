@@ -9,8 +9,15 @@ pip install -r requirements.txt
 ```
 or manually install dependencies as necessary, and run
 ```
+streamlit run web2.py
+```
+or
+```
 streamlit run web.py
 ```
+for the original website version.
+
+
 This should run the website on your local computer, and streamlit will give you instructions on how to access it.
 
 ### For video calls:
