@@ -32,24 +32,16 @@ import streamlit as st
 VERSION = ".".join(st.__version__.split(".")[:2])
 
 from demos import orchestrator
+from demos import fig
 
 demo_pages = {
     "Pipeline": orchestrator.show_examples,
+    "ASL table": fig.show_examples
 }
 
 
 
 contributors = []
-
-intro = f"""
-This release launches Download Button as well as other improvements and bug fixes.
-"""
-
-release_notes = f"""
----
-## ⬇️ Download Button
-With `st.download_button` you can now seamlessly use download functionality both locally and on [Streamlit Cloud](https://streamlit.io/cloud). 
-"""
 
 # End release updates
 
@@ -128,7 +120,7 @@ if len(pages):
         index = 0
     selected_demo = st.sidebar.radio("", pages, index, key="pages")
 else:
-    selected_demo = "Live result"
+    selected_demo = ""
 
 # Draw main page
 if selected_demo in demo_pages:
