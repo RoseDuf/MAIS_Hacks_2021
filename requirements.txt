@@ -1,0 +1,7 @@
+sklearn==0.0
+Pillow==8.3.2
+pyspellchecker==0.6.2
+streamlit==0.89.0
+mediapipe==0.8.7.3
+joblib==1.0.1
+opencv-python==4.5.3.56
