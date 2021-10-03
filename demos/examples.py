@@ -26,7 +26,7 @@ def show():
     img3 = Image.open("pic/k2977.png")
     img4 = Image.open("pic/k2975.png")
     img5 = Image.open("pic/k2971.png")
-    img6 = Image.open("pic/k2968.png")
+    img6 = Image.open("pic/k2979.png")
     #st.image(img)
     #st.image(img)
     
